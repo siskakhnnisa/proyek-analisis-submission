@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+import matplotlib.image as mpimg
+import urllib.request
 from babel.numbers import format_currency
 sns.set(style='dark')
 
@@ -166,6 +168,26 @@ with tab2:
     plt.ylabel("Count")
     plt.xticks(fontsize=12)
     st.pyplot(fig)
+
+with tab3:
+    st.subheader("Customer Geolocation Map")
+    customers_silver = pd.read_csv("geolocation.csv") 
+
+    def plot_brazil_map_streamlit(data): 
+        url = 'https://i.pinimg.com/originals/3a/0c/e1/3a0ce18b3c842748c255bc0aa445ad41.jpg'
+        brazil = mpimg.imread(urllib.request.urlopen(url), 'jpg')
+        
+        fig, ax = plt.subplots(figsize=(10, 10))
+        data.plot(kind="scatter", x="geolocation_lng", y="geolocation_lat", 
+                  alpha=0.3, s=0.3, c='maroon', ax=ax)
+        
+        ax.imshow(brazil, extent=[-73.98283055, -33.8, -33.75116944, 5.4])
+        plt.axis('off') 
+        
+        st.pyplot(fig)
+
+    if st.button('Show Customer Geolocation Map'): 
+        plot_brazil_map_streamlit(customers_silver.drop_duplicates(subset='customer_unique_id'))
 
 # Customer Spend Money
 st.subheader("Customer Spend Money")
