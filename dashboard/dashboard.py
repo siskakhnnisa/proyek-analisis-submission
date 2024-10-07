@@ -62,7 +62,7 @@ def create_order_status(df):
 
 
 datetime_cols = ["order_approved_at", "order_delivered_carrier_date", "order_delivered_customer_date", "order_estimated_delivery_date", "order_purchase_timestamp", "shipping_limit_date"]
-all_df = pd.read_csv("main_data.csv")
+all_df = pd.read_csv("./dashboard/main_data.csv")
 all_df.sort_values(by="order_approved_at", inplace=True)
 all_df.reset_index(inplace=True)
 
@@ -230,7 +230,7 @@ st.pyplot(fig)
 
 with tab3:
     st.subheader("Customer Geolocation Map")
-    customers_silver = pd.read_csv("geolocation_dataset.csv")  
+    customers_silver = pd.read_csv("./dashboard/geolocation_dataset.csv")  
 
     def plot_brazil_map_streamlit(data): 
         url = 'https://i.pinimg.com/originals/3a/0c/e1/3a0ce18b3c842748c255bc0aa445ad41.jpg'
