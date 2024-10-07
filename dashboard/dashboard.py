@@ -5,6 +5,21 @@ import streamlit as st
 from babel.numbers import format_currency
 sns.set(style='dark')
 
+class BrazilMapPlotter:
+    def __init__(self, data, plt, mpimg, urllib, st):
+        self.data = data
+        self.plt = plt
+        self.mpimg = mpimg
+        self.urllib = urllib
+        self.st = st
+
+    def plot(self):
+        brazil = self.mpimg.imread(self.urllib.request.urlopen('https://i.pinimg.com/originals/3a/0c/e1/3a0ce18b3c842748c255bc0aa445ad41.jpg'),'jpg')
+        ax = self.data.plot(kind="scatter", x="geolocation_lng", y="geolocation_lat", figsize=(10,10), alpha=0.3,s=0.3,c='maroon')
+        self.plt.axis('off')
+        self.plt.imshow(brazil, extent=[-73.98283055, -33.8,-33.75116944,5.4])
+        self.st.pyplot()
+
 def create_daily_orders_df(df):
     daily_orders_df = df.resample(rule='D', on='order_approved_at').agg({
         "order_id": "nunique",
@@ -92,6 +107,8 @@ with st.sidebar:
 main_df = all_df[(all_df["order_approved_at"] >= str(start_date)) & 
                  (all_df["order_approved_at"] <= str(end_date))]
 
+map_plot = BrazilMapPlotter(main_df, plt, mpimg, urllib, st)
+
 daily_orders_df = create_daily_orders_df(main_df)
 sum_spend_df = create_sum_spend_df(main_df)
 sum_order_items_df = create_sum_order_items_df(main_df)
@@ -167,7 +184,11 @@ with tab2:
     plt.xticks(fontsize=12)
     st.pyplot(fig)
 
+with tab3:
+    map_plot.plot()
 
+    with st.expander("See Explanation"):
+        st.write('Sesuai dengan grafik yang sudah dibuat, ada lebih banyak pelanggan di bagian tenggara dan selatan. Informasi lainnya, ada lebih banyak pelanggan di kota-kota yang merupakan ibu kota (São Paulo, Rio de Janeiro, Porto Alegre, dan lainnya).')
 
 # Customer Spend Money
 st.subheader("Customer Spend Money")
